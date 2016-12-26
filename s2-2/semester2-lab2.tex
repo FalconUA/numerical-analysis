@@ -1,0 +1,203 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage{multirow}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+\begin{document}
+
+\renewcommand{\figurename}{Мал.}
+
+% Title page
+\begin{titlepage}
+	\centering
+	{\scshape Київський національний університет імені Тараса Шевченка\par}
+	{\scshape факультет кібернетики\par}
+	{\scshape Кафедра обчислювальної математики\par}
+
+	\vspace{2cm}
+	{\scshape\LARGE Лабораторна робота №2 \par}
+	\vspace{0.5cm}
+	{\scshape\Large з навчального курсу "Методи обчислень"\par}
+	\vspace{1cm}
+	{\Large\bfseries "Моделювання руху легкого точкового тіла в системі
+вихрів на площині"\par}
+	\vspace{3cm}
+	\begin{flushright}
+	{\large Виконав:\\студент ІІІ курсу бакалаври\\\textsc{Чан Ха Ву}\par}
+	\vspace{1cm}
+	{\large Прийняв:\\\textsc{Черній Дмитро Іванович}\par}
+	\end{flushright}
+	
+	\vfill
+	{\large Київ \the\year}
+\end{titlepage}
+
+% Main content
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+
+\section{Опис методу}
+У лабораторній роботі описується поведінка легкого точкового тіла, що перебуває у векторному полі швидкостей, індукованих вихрами. При цьому при обчисленні положення тіла використати формулу трапецій.
+
+\section{Постановка задачі}
+Дослідити рух легкого тіла на площині, яке перебуває у векторному полі швидкостей, що спричинене вихрами, рівномірно розташованими на осі $\textup{O}x$ і симетрично відносно центру координат. 
+
+\section{Математична модель та алгоритми}
+Точкове тіло перебуває у векторному полі швидкостей, індукованому вихрями. Вважаючи його нескінченно легким, будемо знехтувати інерцією. Вектор швидкості у кожній точці поля обчислюється за формулою:
+$$ \overrightarrow{V}(x, y) = \sum_{m=1}^{M} {\overrightarrow{V}_m(x, y)},$$
+
+де $\overrightarrow{V}_m(x, y)$ -- вектор швидкості, викликаний $m$-м вихрєю. Цей вектор обчислюється наступним чином:
+$$ \overrightarrow{V}_m = (u_m(x, y), v_m(x, y)).$$
+
+Значення $u_m(x,y)$ та $u_m(x,y)$ виражаються через координати точки та координати вихрей:
+$$  u_m (x, y) = \frac{\Gamma_m}{2 \pi} \cdot \frac{Y_m - y}{R^2_m} $$
+$$  v_m (x, y) = \frac{\Gamma_m}{2 \pi} \cdot \frac{x - X_m}{R^2_m} $$
+
+Де $R_m$ -- відстань між точкою поля та $m$-м вихрею, що обчислюэться за формулою:
+$$ R_m = \sqrt{(x-X_m)^2 + (y-Y_m)^2}. $$
+
+Отже, задача моделювання траєкторії зводиться до пощуку розв'язків задачі Коші:
+$$\frac{\mathrm{d} \overrightarrow{r}}{\mathrm{d} t} = \overrightarrow{V}(\overrightarrow{r})$$
+$$\overrightarrow{r}(t_0) = \overrightarrow{r}_0$$
+
+де $\overrightarrow{r}(t) = \left( x(t), y(t)\right)$ -- координати точкового заряду. Розв'язок цієї задачі можна знайти методом Ейлера або Рунге-Кутта 4-го порядку.
+
+
+\subsection{Метод Ейлера}
+\subsubsection{Опис методу}
+На кожному кроці моделювання будемо обчислювати координати точкового тіла наступним чином:
+
+$$ x_{n+1} = x_n + \frac{\Delta_t}{2} (u(x_n, y_n) + u(x_{n-1}, y_{n-1})) $$
+$$ y_{n+1} = y_n + \frac{\Delta_t}{2} (v(x_n, y_n) + v(x_{n-1}, y_{n-1})) $$
+
+де $\Delta_t = 0.005$, $(x_n, y_n)$ – координати тіла, $(u,v)$ – проекції вектора швидкості  на вісі $\textup{O}x$ та $\textup{O}y$ відповідно, тобто $v=(u,v)$.
+
+\subsubsection{Оцінка похибки}
+$$y_{n+1} = y_n + h \cdot f(x_n, y_n)$$
+$$R_n(h) = y_{n+1} - u_{n+1} = y_n + h \cdot f(x_n, y_n) - u(x_{n+1})$$
+
+Для оцінки локальної похибки $y_n = u_n$, розклавши $u_{n+1} = u(x_{n+1})$ в ряд Тейлора, отримаємо:
+
+$$R_n(h) = u_n + h \cdot f(x_n, u_n) - \left( u_n + h \cdot f(x_n, y_n) + \textup{O}(h^2) \right) = \textup{O}(h^2)$$
+
+Отже, локальна похибка методу Ейлера становить $\textup{O}(h^2)$. Порядок точності методу становить: $\frac{1}{h} (x - x_0) \textup{O}(h^2) = \textup{O}(h)$, а тому порядок апроксимації -- перший.
+
+\subsubsection{Стійкість}
+$$ y_{n+1} = y_n + h \cdot f(y_n)$$
+$$ f(y_n) = \lambda \cdot y_n $$
+$$ y_n = g^n $$
+$$ g^{n+1} = g^n + \lambda \cdot h \cdot g^n $$
+$$ g = 1 + \lambda \cdot h $$
+$$ | g | \le 1 \Rightarrow |1 + \lambda \cdot h| \le 1 \Rightarrow h \le \frac{2}{|\lambda|} \textup{ при } \lambda < 0$$
+
+Отже, метод Ейлера є умовно стійким, оскільки він не є стійким для $\forall h$. 
+
+\subsection{Метод Рунге-Кутта 4-го порядку}
+\subsubsection{Опис методу}
+На кожній ітерації обчислюється наближене значення $\overrightarrow{r}$:
+$$\textbf{\overrightarrow{r}}_{n+1} = \textbf{\overrightarrow{r}}_n + {h \over 6}(\textbf{k}_1 + 2\textbf{k}_2 + 2\textbf{k}_3 + \textbf{k}_4)$$
+
+Де значення $\textbf{k}_1, \textbf{k}_2, \textbf{k}_3, \textbf{k}_4$ обчислюється наступним чином:
+
+$$\textbf{k}_1 = \overrightarrow{V}(\overrightarrow{r}_{n-1})$$
+$$\textbf{k}_2 = \overrightarrow{V}(\overrightarrow{r}_{n-1} + \frac{h}{2}\textbf{k}_1)$$
+$$\textbf{k}_3 = \overrightarrow{V}(\overrightarrow{r}_{n-1} + \frac{h}{2}\textbf{k}_2)$$
+$$\textbf{k}_4 = \overrightarrow{V}(\overrightarrow{r}_{n-1} + h \textbf{k}_3)$$
+
+\subsubsection{Оцінка похибки}
+Так, як для методу Рунге-Кутта 4-го порядку $( m = 4)$ виконується наступне:
+
+$$ y_{n+1} = \sum_{i=1}^{m} {p_i k_i (h)} $$
+
+де 
+$$ k_i(h) = h \cdot f(\zeta_i, \eta_i)$$
+$$ \zeta_i = x_n + \alpha_i h $$
+$$ \eta_i = y_n + \beta_{i, 1}k_1(h) + \dots + \beta_{i, i-1} k_{i-1}(h), i = {1 \dots m}$$
+
+Звідси отримуємо:
+
+$$ R_n(h) = \sum_{k=0}^s {\frac{1}{k!} \left( h^k R_n^{(k)}(0) \right) + \frac{1}{(s+1)!} R^{(s+1)}(\theta h)} = \textup{O}(h^{s+1})$$
+
+Отже, локальна похибка методу Рунге-Кутта 4-го порядку становить $ \textup{O}(h^5)$. Порядок точності методу становить: $ \frac{(x - x_0)}{h} \textup{O}(h^5) = \textup{O}(h^4)$, а тому порядок апроксимації -- червертий.
+
+\subsubsection{Стійкість}
+$$ y_{n+1} = \sum_{i=1}^{m} {p_i k_i (h)} $$
+$$\textbf{k}_1 = \overrightarrow{V}(\overrightarrow{r}_{n-1})$$
+$$\textbf{k}_2 = \overrightarrow{V}(\overrightarrow{r}_{n-1} + \frac{h}{2}\textbf{k}_1)$$
+$$\textbf{k}_3 = \overrightarrow{V}(\overrightarrow{r}_{n-1} + \frac{h}{2}\textbf{k}_2)$$
+$$\textbf{k}_4 = \overrightarrow{V}(\overrightarrow{r}_{n-1} + h \textbf{k}_3)$$
+
+Маємо:
+$$ f(y_n) = \lambda \cdot y_n$$
+$$ y_n = g^n $$
+$$ g^{n+1} = g^n \left( 1 + \lambda h + \frac{\lambda^2 h^2}{2} + \frac{\lambda^3 h^3}{6} + \frac{\lambda^4 h^4}{24}\right)$$
+$$ g = 1 + \lambda h + \frac{\lambda^2 h^2}{2} + \frac{\lambda^3 h^3}{6} + \frac{\lambda^4 h^4}{24}$$
+$$ |g| \le 1 \Rightarrow \lambda \cdot h \in (0, 0.754296/|\lambda|)$$
+
+Отже, метод Рунге-Кутта є умовно стійким.
+
+\newpage
+\section{Комп’ютерне моделювання}
+Нехай червоні точки позначають центри вихрів, зелена крива – слід траєкторії руху точкового тіла. У векторному полі знаходяться 5 вихрей з координатами:
+$$r_1 = (-1.0, -1.0)$$
+$$r_2 = (-1.0, 1.0)$$
+$$r_3 = (1.0, -1.0)$$
+$$r_4 = (1.0, 1.0)$$
+$$r_5 = (0.0, 0.0)$$
+
+та інтенсивностями $\Gamma_m = \Gamma = \frac{1}{5}$, де $m \in \{1, 2, \dots 5\}$. На (Мал. \ref{fig:1}) показано результат моделювання методом Ейлера.
+
+\begin{figure}[!ht]
+	\centering
+   	\includegraphics[width=0.8\textwidth]{figure_3.png}
+	\caption{Моделювання методом Ейлера}
+	\label{fig:1}
+	інтенсивність вихрей: $\Gamma_m = \Gamma = \frac{1}{5}$ \\
+	початкова координата: $v_0 = (u_0, v_0) = (0.5, 0.8)$ \\
+	для $t \in [0 \dots 100]$, $\Delta t = 0.005$
+\end{figure}	
+\newpage
+
+
+\begin{figure}[!ht]
+	\centering
+   	\includegraphics[width=0.8\textwidth]{figure_4.png}
+	\caption{Моделювання методом Ейлера}
+	\label{fig:2}
+	інтенсивність вихрей: $\Gamma_m = \Gamma = \frac{1}{5}$ \\
+	початкова координата: $v_0 = (u_0, v_0) = (0.91, 0.91)$ \\
+	для $t \in [0 \dots 100]$, $\Delta t = 0.005$
+\end{figure}	
+
+На (Мал. \ref{fig:2}) показано результат моделювання методом Ейлера для іншої початкової точки, ближчої до крайнього вихру.
+
+
+\newpage
+\begin{figure}[!ht]
+	\centering
+   	\includegraphics[width=0.8\textwidth]{figure_5.png}
+	\caption{Моделювання методом Рунге-Кутта 4-го порядку}
+	\label{fig:3}
+	інтенсивність вихрей: $\Gamma_m = \Gamma = \frac{1}{5}$ \\
+	початкова координата: $v_0 = (u_0, v_0) = (0.5, 0.7)$ \\
+	для $t \in [0 \dots 100]$, $\Delta t = 0.01$
+\end{figure}	
+
+Можна побачити, що даний метод дає достатньо неточний результат та похибки накопичуються.
+
+На (Мал. \ref{fig:3}) показано результат моделювання методом Рунге-Кутта 4-го порядку. Бачимо що результат дуже точний.
+
+
+\newpage
+\section{Висновки}
+
+Було досліджено поведінку легкого точкового тіла в системі вихрів на площині для заданих випадків розподілу їх інтенсивностей. При цьому розглянуто різні кількості вихрів та різні щільності їх розміщення. Вихрі розташовані по точкм $(-1, -1), (-1, 1), (1, -1), (1, 1), (0, 0)$. Незначне відхилення моделювання можна компенсувати припущенням, що у точкового тіла є мала інерція. 
+\end{document}
