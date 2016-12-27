@@ -203,7 +203,7 @@ u(x) = m_1 sin(m_2 x) + m_3 cos(m_4 x) + m_5
 
 Нехай задано рівняння
 
-\begin{equation} 
+\begin{equation}  \label{uravnenie}
 \begin{split}
 Lu = f
 \end{split}					
@@ -212,7 +212,7 @@ Lu = f
 де $L: H \rightarrow H$ -- лінійний диференціальний оператор на певному гільбертовому просторі $H$, $f \in H$, $u$ -- невідома функція.
 При чому додається однородні граничні крайові умови:
 
-\begin{equation} 
+\begin{equation} \label{kraevaya_zad}
 \begin{split}
 \alpha_1 u(a) - \alpha_2 u'(a) = 0, \quad |\alpha_1| + |\alpha_2| \neq 0, \quad \alpha_1 \alpha_2 \geq 0 \\
 \beta_1 u(b) - \beta_2 u'(b) = 0, \quad |\beta_1| + |\beta_2| \neq 0, \quad \beta_1 \beta_2 \geq 0 \\
@@ -222,7 +222,7 @@ Lu = f
 
 При використанні будь-якого з проекційних методів обирається лінійно-незалежна система функції $\phi_1(x), \phi_2(x), \dots \phi_n(x)$, яку будемо називати координатами, і приблизьний розв'язок щукається у вигляді лінійної комбінації цих функцій
 
-\begin{equation} 
+\begin{equation} \label{priblizitelno}
 \begin{split}
 y^{(n)}(x) = \sum_{i=1}^n {c_i \phi_i (x)}.
 \end{split}					
@@ -240,6 +240,98 @@ y^{(n)}(x) = \sum_{i=1}^n {c_i \phi_i (x)}.
 
 \subsection{Метод найменших квадратів}
 
+Очевидно що розв'язок $y^*$ крайової задачі \ref{kraevaya_zad} для рівняння \ref{uravnenie} також мінімізує функціонал 
+
+\begin{equation} 
+\begin{split}
+\omega(u) = \| Lu - f \|^2 = (Lu - f, Lu - f)
+\end{split}					
+\end{equation}
+
+заданому на множині $D(L)$. В методі найменших квадратів, пощук коефіцієнтів $c_i$ у приблизьному розв'язку \ref{priblizitelno} зводиться до розв'язку матричного рівняння:
+
+\begin{equation} 
+\begin{split}
+\sum_{i=j}^{n} c_j (L\phi_i, L\phi_j) = (f, L\phi_i), \quad i = 1, 2, \dots n
+\end{split}					
+\end{equation}
+
+\subsection{Метод Бубнова-Галеркіна}
+
+В методі найменших квадратів, коефіцієнти $c_i$ у приблизьному розв'язку \ref{priblizitelno} щукається за допомогою системи:
+
+\begin{equation} 
+\begin{split}
+\sum_{i=j}^{n} c_j (\phi_i, L\phi_j) = (f, \phi_i), \quad i = 1, 2, \dots n
+\end{split}					
+\end{equation}
+
+Цю систему можна трактувати як умова ортогональності в $L_2$ нев'язки $Lu_n - f$ всім функціям координатної системи.
+
+%----------------------------------------------------------------------------------------
+%	ПРАКТИЧНА ЧАСТИНА
+%----------------------------------------------------------------------------------------
+
+\section{Практична частина}
+
+Обчислимо спочатку $f$ і $\mu_1, \mu_2$, виходячи з того, що ми знаємо, що функція $u$ (розв'язок) виглядає як $u(x) = m_1 x^{m_2} + m_3 x^{m_4} + m_5$. Тому ми просто можемо підставити розв'язок u у крайові умови \ref{conditions}.
+
+\bigskip
+
+Маємо неоднорідні краєві умови. Тому розв'язок будемо шукати у вигляді $u = v + \psi$, де $\psi = cx + d$. Функція $\psi$ буде задовольняти неоднорідним крайовим умовам, тому функція $v$ вже буде задовольнати однорідним крайовим умовам. Для знаходження коефіцієнтів $c,d$ підставимо функцію $\psi$ в крайові умови і розв'яжемо систему з двох рівнянь.
+
+	\begin{equation*}
+	\begin{split}
+	-k(a)\psi'(a) + \alpha_1 \psi(a) = \mu_1 \\ 
+	k(b)\psi'(b) + \alpha_2 \psi(b) = \mu_2
+	\end{split}
+	\end{equation*}
+
+Звідси отримуємо:
+
+	\begin{equation}
+	\begin{split}
+c = \frac{-(\alpha_2 \mu_1 - \alpha_1 \mu_2)}{\alpha_2\alpha_1(b-a) + \alpha_2 k(a) + alpha_1 k(b)} \\
+d = \frac{(-a \alpha_1 \mu_2 + b \alpha_2 \mu_1 + k(a) \mu_2 + \mu_1 k(b)}{\alpha_2\alpha_1(b-a) + \alpha_2 k(a) + alpha_1 k(b)}
+	\end{split}
+	\end{equation}
+	
+Після цього перераховуємо функцію  $f$ для того, щоб знайти вигляд рівняння для $v$:
+	
+	\begin{equation}
+	\begin{split}
+	f_1(x) = f(x) - \left( -(k\psi')' + p(x)\psi' + q(x)\psi \right)
+	\end{split}
+	\end{equation}
+	
+Задамо систему функцій $\phi$ для методу колокації у вигляді 
+
+	\begin{align}
+	\phi_i(x) = 
+	\begin{cases}
+	(x - a)^2(x - A), & i = 1 \\ 
+	(x - b)^2(x - B), & i = 2 \\
+	(x - a)^{i -1}(x - b)^2 & i = 3, \dots n
+	\end{cases}
+	\end{align}
+
+Для знаходження невідомих коефіцієнтів підставимо ці функції у вже однорідні крайові умови. Треба розв'язати таку систему рівнянь: 
+	
+	\begin{equation}
+	\begin{split}
+	-k(a)\phi_2'(a) + \alpha_1 \phi_2(a) = \mu_1 \\ 
+	k(b)\phi_1'(b) + \alpha_2 \phi_1(b) = \mu_2
+	\end{split}
+	\end{equation}
+	
+Звідси
+
+	\begin{equation}
+	\begin{split}
+	A = \frac{-k(b)(a-b)(a-3b) - \alpha_2(b-a)^2b}{2k(b)(a-b) - \alpha_2(b-a)^2} \\
+	B = \frac{k(a)(b-a)(b-3a) - \alpha_1(a-b)^2a}{-2k(a)(b-a)2 - \alpha_1(a-b)^2}
+	\end{split}
+	\end{equation}
 
 
 \subsection{Heading on level 2 (subsection)}
