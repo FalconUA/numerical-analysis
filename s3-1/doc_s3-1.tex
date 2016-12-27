@@ -37,6 +37,7 @@
 \usepackage{amsmath,amsfonts,amsthm} % Math packages
 \usepackage{mathtools}
 \usepackage{graphicx}
+\usepackage{booktabs}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
@@ -333,60 +334,31 @@ d = \frac{(-a \alpha_1 \mu_2 + b \alpha_2 \mu_1 + k(a) \mu_2 + \mu_1 k(b)}{\alph
 	\end{split}
 	\end{equation}
 
+Така система функції задовольняє однорідним крайовим умовам \ref{conditions}, а значить, розв'язок для $v$ \ref{priblizitelno} теж буде задовольняти цим умовам.
 
-\subsection{Heading on level 2 (subsection)}
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
-\begin{align}
-A = 
-\begin{bmatrix}
-A_{11} & A_{21} \\
-A_{21} & A_{22}
-\end{bmatrix}
-\end{align}
-Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
-
-%------------------------------------------------
-
-\subsubsection{Heading on level 3 (subsubsection)}
-
-\lipsum[3] % Dummy text
-
-\paragraph{Heading on level 4 (paragraph)}
-
-\lipsum[6] % Dummy text
 
 %----------------------------------------------------------------------------------------
-%	PROBLEM 2
+%	РЕЗУЛЬТАТ РОБОТИ
 %----------------------------------------------------------------------------------------
 
-\section{Lists}
+\section{Результат роботи програми}
 
-%------------------------------------------------
+Надалі колір для функцій: зелений -- точний розв'язок, маджента(пурпурний) - чисельний розв'язок.
 
-\subsection{Example of list (3*itemize)}
-\begin{itemize}
-	\item First item in a list 
-		\begin{itemize}
-		\item First item in a list 
-			\begin{itemize}
-			\item First item in a list 
-			\item Second item in a list 
-			\end{itemize}
-		\item Second item in a list 
-		\end{itemize}
-	\item Second item in a list 
-\end{itemize}
+\bigskip
 
-%------------------------------------------------
+\includegraphics[width=1\linewidth]{res.png}
 
-\subsection{Example of list (enumerate)}
-\begin{enumerate}
-\item First item in a list 
-\item Second item in a list 
-\item Third item in a list
-\end{enumerate}
+\begin{center}
+	%                 n   a   b   m1  m2  m3  m4  m5  k1  k2  k3  p1  p2  p3  q1  q2  q3  a1  a2
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+	\hline
+	n & a & b & $m_1$ & $m_2$ & $m_3$ & $m_4$ & $m_5$ & $k_1$ & $k_2$ & $k_3$ & $p_1$ & $p_2$ & $p_3$ & $q_1$ & $q_2$ & $q_3$ \\ \hline
+	10 & -1 & 1 & 10 & 3 & 1 & 1 & 7 & 1 & 2 & 1 & 4 & 1 & 3 & 1 & 2 & 1 \\ \hline
 
 
+    \end{tabular}
+\end{center}
 
 \end{document}
