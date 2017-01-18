@@ -41,6 +41,8 @@
 \usepackage[margin=1.15in]{geometry}
 \usepackage{accents}
 \usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg}
 
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
@@ -131,6 +133,7 @@
 \end{titlepage}
 
 \renewcommand{\refname}{Літератури та посилання}
+\renewcommand{\figurename}{Мал.}
 
 %----------------------------------------------------------------------------------------
 %	ПОСТАНОВКА ЗАДАЧИ
@@ -167,9 +170,10 @@ k(x)\frac{d}{dx}u(x) + \alpha_2 u(x) = \mu_2(x), \quad x = b
 
 \begin{equation} \label{anal:coefficients}  
 \begin{split}
-k(x) = k_1 cos(k_2 x) + k_3, \quad k(x) > 0 \\
-p(x) = p_1 sin(p_2 x) + p_3, \quad p(x) > 0 \\
-q(x) = q_1 cos(q_2 x) + q_3, \quad q(x) > 0 \\
+k(x) = k_1 cos(k_2 x) + k_3, \quad
+p(x) = p_1 sin(p_2 x) + p_3, \quad 
+q(x) = q_1 cos(q_2 x) + q_3, \\
+k(x) > 0, \quad p(x) > 0, \quad q(x) > 0.
 \end{split}					
 \end{equation}
 
@@ -207,7 +211,7 @@ u(x) = m_1 sin(m_2 x) + m_3 cos(m_4 x) + m_5
 
 На відрізку $[a, b]$ введемо рівномірну сітку $\overline{\omega}_h = \{x_i = a + ih, i = 0, 1, \dots, n\}$ з шагом $h = {(b-a)}/{n}$. Назвемо цю сітку основною. Розв'язок задачі (\ref{global:problem}) з крайовими умовами (\ref{global:conditions}), функціональні коєфіцієнти та крайові значення яких набувають вигляд (\ref{anal:coefficients}), (\ref{anal:f(x)}) та (\ref{anal:boundvalues}), будемо щукати у вигляді сіткової функції \( y_i = y(x_i)\), заданої на точках сітки \(\overline{\omega}_h\).  
 
-\subsection{Апроксимація диференціального рівняння різницевим}
+\subsection{Апроксимація диференціального рівняння різницевим} \label{ssec:approx}
 
 Позначимо через \( k_i, p_i, q_i, f_i \) значення функції \( k(x), p(x), q(x), f(x)\) у точках \( x_i \) однорідної сітки \( \overline{\omega}_h \). Замінимо похідні в рівняння (\ref{global:problem}) скінченно-різницевими виразами:
 
@@ -241,7 +245,7 @@ A_i = -k_{i+\frac{1}{2}} - \frac{h}{2}p_i, \quad B_i = k_{i+\frac{1}{2}} + k_{i 
 \end{multlined}
 \end{equation}
 
-Нескладно переконатись, що така різницева схема апроксимує задачу (\ref{global:problem}) з похибкою другого порядку \( O(h^2)\). Також, можна показати що схема збігається до точного розв'язку у класі гладких функції коефіцієнтів. Ідея для доведення цього факту можна знайти у \cite[с. 106--108]{Samarskii71}.
+Нескладно переконатись, що така різницева схема апроксимує задачу (\ref{global:problem}) з похибкою другого порядку \( O(h^2)\). Також, можна показати що схема збігається до точного розв'язку у класі гладких функції коефіцієнтів, при якому \(k(x) > k_0 \geq 0\) та \(q(x) > 0\). Ідея для доведення цього факту можна знайти у \cite[с. 106--108]{Samarskii71}.
 
 \subsection{Апроксимація крайових умов}
 
@@ -298,7 +302,7 @@ A_1 & B_1 & C_1 & 0 & \dots & 0 & 0 & 0\\
 Побудуємо різницеву схему для апроксимації крайових умов (\ref{global:conditions}) без підвищення щільності сітки \(\overline{\omega}_h\) (тобто без зменшення шагу \(h\)). Розглянему таку схему:
 
 \begin{equation}
-\begin{multlined} \label{diff:boundary_general}
+\begin{multlined} \label{diff:boundary_extended}
 -k_{\frac{1}{2}} \frac{y_{\frac{1}{2}} - y_{-\frac{1}{2}}}{h} + \alpha_1 \frac{y_{\frac{1}{2}} - y_{-\frac{1}{2}}}{2} = \mu_1, \\
 k_{n - \frac{1}{2}} \frac{y_{n + \frac{1}{2}} - y_{n-\frac{1}{2}}}{h} + \alpha_1 \frac{y_{n+\frac{1}{2}} - y_{n-\frac{1}{2}}}{2} = \mu_2.
 \end{multlined}
@@ -306,9 +310,14 @@ k_{n - \frac{1}{2}} \frac{y_{n + \frac{1}{2}} - y_{n-\frac{1}{2}}}{h} + \alpha_1
 
 Можна розглянути цю схему як різницева схема на розширенній сітки \( \bar{\omega}'_h = \{ x = x_i, x_i = a - \frac{h}{2} + ih, i = 0, 1, \dots n+1\}\). Легко довести, що така схема має другий порядок апроксимації, тобто \( O(h^2)\). Ідея для доведення цього факту можна знайти у \cite[с. 148--149]{Samarskii71}.
 
-\subsection{Метод прогонки}
 
-Для розв'язання тридіагональних систем використовується метод прогонки, який працює за \(O(N)\), де \( N \) -- розмір матриці. Розв'язок системи щукається у вигляді
+%----------------------------------------------------------------------------------------
+%	ПРАКТИЧНА ЧАСТИНА
+%----------------------------------------------------------------------------------------
+
+\section{Практична частина}
+
+Для розв'язання тридіагональної системи (\ref{linear_system}) будемо використовувати метод прогонки, який працює за \(O(n)\), де \( n \) -- розмір матриці. Розв'язок системи щукається у вигляді
 
 \begin{equation}
 \begin{multlined} \label{diff:solve_tridiag}
@@ -342,6 +351,75 @@ s_i = \frac{C_i}{B_i-A_is_{i-1}}, \quad t_i = \frac{A_it_{i-1}-G_i}{B_i-A_is_{i-
 
 У \(n\)-му рівнянні системи (\ref{linear_system}) \(C_n = 0\), отже, \(s_n = 0\), значить з (\ref{diff:solve_tridiag}) випливає що \(y_n = t_n\). По формулі (\ref{diff:solve_tridiag}) знаходимо остальні коефіцієнти.
 
+%----------------------------------------------------------------------------------------
+%	РЕЗУЛЬТАТ РОБОТИ
+%----------------------------------------------------------------------------------------
+
+\section{Результат роботи програми}
+
+Надалі колір для функцій: зелений -- точний розв'язок, маджента(пурпурний) - чисельний розв'язок.
+
+
+\begin{figure}[h!]
+\begin{center}
+	%                  a   b   m1  m2  m3  m4  m5  k1  k2  k3  p1  p2  p3  q1  q2  q3  a1  a2
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+	\hline
+	a & b & $m_1$ & $m_2$ & $m_3$ & $m_4$ & $m_5$ & $k_1$ & $k_2$ & $k_3$ & $p_1$ & $p_2$ & $p_3$ & $q_1$ & $q_2$ & $q_3$ & $\alpha_1$ & $\alpha_2$ \\\hline
+	-1 & 1 & 10 & 3 & 1 & 1 & 7 & 1 & 2 & 1 & 4 & 1 & 3 & 1 & 2 & 1 & 1 & 1\\ \hline
+    \end{tabular}
+\end{center}
+\bigskip
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{res1_n12}
+  \caption{\it При \(n = 12\)}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.9\linewidth]{res1_n100}
+  \caption{\it При \(n = 100\)}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{\it Результат роботи програми \cite{SourceCode} при параметрах, наведених у таблиці. Зеленим пунктиром зображено точний розв'язок, а пурпурною лінією -- чисельний розв'язок. Можна побачити, що навіть при малих значеннях \(n\), метод дає дуже гарні результати апроксимації.}
+\label{fig:res1}
+\end{figure}
+
+
+\newpage
+Наведемо приклад, де чисельний роз'язок методом безпосередньої заміни диференціальних похідних частковими не збігається до точного розв'язку.
+
+\begin{figure}[h!]
+\begin{center}
+	%                  a   b   m1  m2  m3  m4  m5  k1  k2  k3  p1  p2  p3  q1  q2  q3  a1  a2
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+	\hline
+	a & b & $m_1$ & $m_2$ & $m_3$ & $m_4$ & $m_5$ & $k_1$ & $k_2$ & $k_3$ & $p_1$ & $p_2$ & $p_3$ & $q_1$ & $q_2$ & $q_3$ & $\alpha_1$ & $\alpha_2$ \\\hline
+	$-\pi$ & $\pi$ & 10 & 3 & 1 & 1 & 7 & 2 & 2 & 1 & 4 & 1 & 1 & 1 & 2 & 1 & 1 & 1\\ \hline
+    \end{tabular}
+\end{center}
+\bigskip
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.95\linewidth]{res2_n50}
+  \caption{\it При \(n = 12\)}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.95\linewidth]{res2_n1500}
+  \caption{\it При \(n = 100\)}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{{\it Результат роботи програми \cite{SourceCode} при параметрах, наведених у таблиці. Зеленим пунктиром зображено точний розв'язок, а пурпурною лінією -- чисельний розв'язок. Можна побачити, що у цьому випадку чим менше шаг \(h\) однорідної сітки \( \overline{\omega}_h\), тим більше похибка апроксимації.}}
+\label{fig:res2}
+\end{figure}
+
+У результаті, зображеної на (мал. \ref{fig:res2}) можна побачити, що різницеві схеми (\ref{diff:full_problem}) та (\ref{diff:boundary2}) не збігається до розв'язку (\ref{anal:solution}) задачі (\ref{global:problem}). Це можна пояснити тим, що, як зазначено у пункті \ref{ssec:approx}, розв'язок збігається тільки коли \( k(x) > 0\) та \(q(x) \geq 0\). У нашому прикладі, при \( k_1 = 2\) та  \( k_3 = 1\), функція \(k\) може приймати значення менше нуля, а отже, не задовольняє умовам збіжності.
+
 \begin{thebibliography}{9}
 
 \bibitem{TihonovSamarskii}
@@ -354,8 +432,8 @@ s_i = \frac{C_i}{B_i-A_is_{i-1}}, \quad t_i = \frac{A_it_{i-1}-G_i}{B_i-A_is_{i-
   Главная редакция физико-математической литературы изд-ва «Наука», 
   М., 1971. 
 \bibitem{SourceCode}
-  Чан Х. В. (2017). Код к данной работе.
-  \url{https://github.com/FalconUA/numerical-analysis/blob/master/s3-2/appointment_s3-2.ipynb}
+  Чан Х. В., \emph{Метод безпосередньої заміни диференціальних похідних частковими на мові Python 3},
+  \url{https://github.com/FalconUA/numerical-analysis/blob/master/s3-2/appointment_s3-2.ipynb}, 2017.
 
 \end{thebibliography}
 \end{document}
