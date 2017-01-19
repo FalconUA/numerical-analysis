@@ -205,6 +205,42 @@ v(x, t) = \frac{(u(x, t) - u_\text{cont})}{u_\text{cont}}; \quad \hat{t} = \frac
 
 \subsection{Апроксимізація різницевою схемою}
 
+Введемо сітку \( \overline{\omega}_{h,t} = \overline{\omega}_h \times \overline{\omega}_t\), де \( \overline{\omega}_h = \left\{ x_i = ih, h = \frac{1}{N}, i = 0, 1, \dots N\right\}\). При чому для кожного фіксованого \( \tau\), \( \overline{\omega}_t = \left\{t_j = j\tau, j = 0, 1, \dots M\right\}\). 
+\bigskip
+
+Надалі для зручності будемо вважати, що наше рівняння має вигляд (змінені лише назви змінних):
+
+\begin{equation}
+\begin{multlined} \label{simplified}
+\frac{\partial U}{\partial t} = \frac{1}{x^2} \frac{\partial}{\partial x} \left( x^2 \frac{\partial U}{\partial x}\right)
+\end{multlined}
+\end{equation}
+
+Введемо заміну
+
+\begin{equation}
+\begin{multlined} \label{simplified}
+W = x \frac{\partial U}{\partial x}
+\end{multlined}
+\end{equation}
+
+Далі помножимо обидві частини на \( x\), і проінтегруємо наше початкове рівняння на проміжку \(x \in [x_{i-\frac{1}{2}}, x_{i+\frac{1}{2}}]\) і поділимо обидві частини на \( h\):
+
+\begin{equation}
+\begin{multlined} \label{simplified}
+\frac{1}{h} \int_{x_{i - \frac{1}{2}}}^{x_{i+\frac{1}{2}}} {x\frac{\partial U}{\partial t}}\,dx = \frac{1}{h} \int_{x_{i - \frac{1}{2}}}^{x_{i+\frac{1}{2}}} {\frac{\partial W}{\partial x}}\,dx
+\end{multlined}
+\end{equation}
+
+Використовуючи теорему про середнє значення, винесемо \( \frac{\partial U}{\partial t}\) за межі першої частини інтегралу і праву частину, враховуючи \( w_i = w(x_i)\). Отримаємо
+
+\begin{equation}
+\begin{multlined} \label{simplified}
+\frac{\partial U_i}{\partial t} \times \frac{1}{h} \int_{x_{i-\frac{1}{2}}}^{x_{i-\frac{1}{2}}} {x}\,dx = \frac{1}{h}\left( w_{i + \frac{1}{2}} - w_{i - \frac{1}{2}}\right)
+\end{multlined}
+\end{equation}
+
+
 Як показано у \cite[с. 185-208]{Samarskii71}, безрозмірна задача теплопровідності у сферичних координатах (\ref{nomes:problem}), (\ref{nomes:conditions}) за допомогою інтегро-інтерполяційного метода можна апроксимувати такою системою:
 
 \begin{equation}
@@ -254,6 +290,8 @@ l_N = -\frac{\sigma}{h}, \quad d_N = \frac{\sigma}{h} + \hat{\gamma}\sigma + \fr
 \end{split}
 \end{align}
 
+Для нульового шару при \(j = 0\) розв'язок задачі теплопровідності збігається з початковими умовами.
+
 %----------------------------------------------------------------------------------------
 %	ПРАКТИЧНА ЧАСТИНА
 %----------------------------------------------------------------------------------------
@@ -294,7 +332,6 @@ s_i = \frac{C_i}{B_i-A_is_{i-1}}, \quad t_i = \frac{A_it_{i-1}-G_i}{B_i-A_is_{i-
 
 У \(n\)-му рівнянні системи (\ref{diff:tridiag}) \(C_n = 0\), отже, \(s_n = 0\), значить з (\ref{diff:solve_tridiag}) випливає що \(y_n = t_n\). По формулі (\ref{diff:solve_tridiag}) знаходимо остальні коефіцієнти.
 
-\newpage
 %----------------------------------------------------------------------------------------
 %	РЕЗУЛЬТАТ РОБОТИ
 %----------------------------------------------------------------------------------------
@@ -304,7 +341,12 @@ s_i = \frac{C_i}{B_i-A_is_{i-1}}, \quad t_i = \frac{A_it_{i-1}-G_i}{B_i-A_is_{i-
   \centering
   \includegraphics[width=.9\linewidth]{res0}
   \caption{\it \( u(t)\) при фіксованому \(t\).}
+\end{figure}
 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=.9\linewidth]{res1}
+  \caption{\it \( u(t)\) при фіксованому \(t\).}
 \end{figure}
 
 \begin{thebibliography}{9}
