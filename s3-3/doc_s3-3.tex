@@ -216,35 +216,99 @@ v(x, t) = \frac{(u(x, t) - u_\text{cont})}{u_\text{cont}}; \quad \hat{t} = \frac
 Отже, рівняння та крайові умови можна записати таким чином:
 
 \begin{align}
-\begin{array}
-\left{ \right.
-\end{array}
+\left\{\begin{array}{c}
+y_t = \Lambda(\overline{t})y, \quad 0 < x = ih < 1, \quad t = j\tau > 0\\
+y(x, 0) = u_0(x), \quad y(1, t) = u_\text{cont}\\
+y^{(\sigma)} = \sigma\hat{y} + (1 - \sigma)y
+\end{array}\right.
 \end{align}
-%----------------------------------------------------------------------------------------
-%	ТЕОРЕТИЧЕСКИЕ ВЕДОМОСТИ
-%----------------------------------------------------------------------------------------
 
-\section{Теоретичні відомості}
+Маємо:
 
+\begin{align} \label{diff:approx}
+\left\{\begin{array}{c}
+y_{t, i}^j = \sigma \frac{1}{x_i^2}\left( x_{i-\frac{1}{2}}^2 y_{\overline{x}}^{j+1}\right)_{x, i} + (1-\sigma)\left( x_{i-\frac{1}{2}}^2 y_{\overline{x}}^j\right) \\ \\
+\sigma y_{x, 0}^{j+1} + (1-\sigma)y_{x, 0}^j = \frac{h}{2 \cdot 3} y_{t, 0}^j \\\\
+-\sigma y_{x, N}^{j+1} - (1 -\sigma)y_{x, N}^j = \hat{\gamma} \left( \sigma y_{N}^{j+1} + (1-\sigma)y_N^j\right) + \frac{h}{2}y_{t, N}^j
+\end{array}\right. 
+\end{align}
+
+Побудуємо тридіагональну систему рівнянь для \( j+1\) шару
+
+\begin{align} \label{diff:approx}
+\left\{\begin{array}{c}
+d_0y_0^{j+1} + c_0y_1^{j+1} = f_0\\\\
+l_iy_{i-1}^{j+1} + d_iy_i^{j+1} + u_iy_{i+1}^{j+1} = f_i\\\\
+l_Ny_{N-1}^{j+1} + d_Ny_N^{j+1} = f_N
+\end{array}\right. 
+\end{align}
+
+де коефіцієнти обчислюється наступним чином:
+
+\begin{align} \label{diff:tridiag}
+\begin{split}
+d_0 = \frac{-\sigma}{h} - \frac{h}{2 \cdot 3\tau}, \quad u_0 = \frac{\sigma}{h}, \quad f_0 = -(1-\sigma)\frac{y_1^j - y_0^j}{h} - \frac{h}{2 \cdot 3} \frac{y_0^j}{\tau} \\
+l_i = \frac{-\sigma x_{i-\frac{1}{2}}^2}{h^2 x_i^2}, \quad d_i = \frac{1}{\tau} + \frac{\sigma \left( x_{i-\frac{1}{2}}^2 +x_{i+\frac{1}{2}}^2 \right)}{h^2 x_i^2}, \quad u_i = \frac{-\sigma x_{i+\frac{1}{2}}^2}{h^2 x_i^2}\\
+f_i =\frac{y_i^j}{\tau} + (1-\sigma)\frac{1}{x_i^2} \left( \frac{x_{i+\frac{1}{2}}^2 y_{i+1}^j - \left( x_{i-\frac{1}{2}}^2 + x_{1+\frac{1}{2}}^2 \right)y_i^j + x_{i-\frac{1}{2}}^2 y_{i-1}^j }{h^2}\right)\\
+l_N = -\frac{\sigma}{h}, \quad d_N = \frac{\sigma}{h} + \hat{\gamma}\sigma + \frac{h}{2\tau}\\f_N = -(1-\sigma)\left( \frac{y_N^j - y_{N-1}^j}{h} + \hat{\gamma}y_N^j\right) + \frac{h}{2\tau}y_N^j
+\end{split}
+\end{align}
 
 %----------------------------------------------------------------------------------------
 %	ПРАКТИЧНА ЧАСТИНА
 %----------------------------------------------------------------------------------------
 
+\section{Практична частина}
 
+Для розв'язання тридіагональної системи (\ref{diff:tridiag}) будемо використовувати метод прогонки, який працює за \(O(n)\), де \( n \) -- розмір матриці. Розв'язок системи щукається у вигляді
+
+\begin{equation}
+\begin{multlined} \label{diff:solve_tridiag}
+y_i = s_i + y_{i+1} + t_i, \quad i = 0, 1, \dots n-1.
+\end{multlined}
+\end{equation}
+
+Коефіцієнти \(s_i\) та \(t_i\) щукається наступним чином. З системи (\ref{diff:tridiag}) можна побачити, що
+
+\begin{equation}
+\begin{multlined} 
+s_0 = \frac{C_0}{B_0}, \quad t_0 = \frac{-G_0}{B_0}.
+\end{multlined}
+\end{equation}
+
+Підставимо \( y_{i-1} \) у \(i\)-му рівнянні системи:
+
+\begin{equation}
+\begin{multlined} 
+A_i\left(s_{i-1}y_i + t_{i-1}\right) - B_i y_i + C_iy_{i+1} = G_i,
+\end{multlined}
+\end{equation}
+
+отримаємо рекурентну формулу:
+
+\begin{equation}
+\begin{multlined} 
+s_i = \frac{C_i}{B_i-A_is_{i-1}}, \quad t_i = \frac{A_it_{i-1}-G_i}{B_i-A_is_{i-1}}, \quad i = 1, 2, \dots n.
+\end{multlined}
+\end{equation}
+
+У \(n\)-му рівнянні системи (\ref{diff:tridiag}) \(C_n = 0\), отже, \(s_n = 0\), значить з (\ref{diff:solve_tridiag}) випливає що \(y_n = t_n\). По формулі (\ref{diff:solve_tridiag}) знаходимо остальні коефіцієнти.
+
+\newpage
 %----------------------------------------------------------------------------------------
 %	РЕЗУЛЬТАТ РОБОТИ
 %----------------------------------------------------------------------------------------
 
 \section{Результат роботи програми}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=.9\linewidth]{res0}
+  \caption{\it \( u(t)\) при фіксованому \(t\).}
 
+\end{figure}
 
 \begin{thebibliography}{9}
 
-\bibitem{TihonovSamarskii}
-  А. Н. Тихонов, А. А. Самарский,
-  \emph{Об однородных разностных схемах},
-  Журнал вычислительной математики и математической физики, 1961.
 \bibitem{Samarskii71}
   А. А. Самарский,
   \emph{Введение в теорию разностных схем},
@@ -252,7 +316,7 @@ v(x, t) = \frac{(u(x, t) - u_\text{cont})}{u_\text{cont}}; \quad \hat{t} = \frac
   М., 1971. 
 \bibitem{SourceCode}
   Чан Х. В., \emph{Метод безпосередньої заміни диференціальних похідних частковими на мові Python 3}, 2017. 
-  \url{https://github.com/FalconUA/numerical-analysis/blob/master/s3-2/appointment_s3-2.ipynb}
+  \url{https://github.com/FalconUA/numerical-analysis/blob/master/s3-3/appointment_s3-3.ipynb}
 
 \end{thebibliography}
 \end{document}
