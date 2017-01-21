@@ -251,7 +251,7 @@ A_i = -k_{i+\frac{1}{2}} - \frac{h}{2}p_i, \quad B_i = k_{i+\frac{1}{2}} + k_{i 
 
 Помітимо, що у рівнянні (\ref{diff:grouped}) не вистачає два відношення для пощуку розв'язку \( y_i = y(x_i)\). Ці відношення можна задати, апроксимуючи крайові умови (\ref{global:conditions}). Розглянемо дві різницеві схеми для цих умов.
 
-\bigskip
+\subsubsection{Апроксимація крайових умов з першим порядком}\label{approx:O(h)}
 
 Явна схема апроксимування умов (\ref{global:conditions}) виглядає наступним чином:
 
@@ -299,16 +299,28 @@ A_1 & B_1 & C_1 & 0 & \dots & 0 & 0 & 0\\
 \end{bmatrix} \times \left[ \begin{array}{c} y_0 \\ y_1 \\ y_2 \\ \vdots \\ y_{n-1} \\ y_n \end{array} \right]
 \end{align}
 
+\subsubsection{Апроксимація крайових умов з другим порядком}\label{approx:O(h^2)}
+
 Побудуємо різницеву схему для апроксимації крайових умов (\ref{global:conditions}) без підвищення щільності сітки \(\overline{\omega}_h\) (тобто без зменшення шагу \(h\)). Розглянему таку схему:
 
 \begin{equation}
 \begin{multlined} \label{diff:boundary_extended}
--k_{\frac{1}{2}} \frac{y_{\frac{1}{2}} - y_{-\frac{1}{2}}}{h} + \alpha_1 \frac{y_{\frac{1}{2}} - y_{-\frac{1}{2}}}{2} = \mu_1, \\
-k_{n - \frac{1}{2}} \frac{y_{n + \frac{1}{2}} - y_{n-\frac{1}{2}}}{h} + \alpha_1 \frac{y_{n+\frac{1}{2}} - y_{n-\frac{1}{2}}}{2} = \mu_2.
+-k_{0} \frac{y_{\frac{1}{2}} - y_{-\frac{1}{2}}}{h} + \alpha_1 \frac{y_{\frac{1}{2}} + y_{-\frac{1}{2}}}{2} = \mu_1, \\
+k_{n} \frac{y_{n + \frac{1}{2}} - y_{n-\frac{1}{2}}}{h} + \alpha_1 \frac{y_{n+\frac{1}{2}} + y_{n-\frac{1}{2}}}{2} = \mu_2.
 \end{multlined}
 \end{equation}
 
-Можна розглянути цю схему як різницева схема на розширенній сітки \( \bar{\omega}'_h = \{ x = x_i, x_i = a - \frac{h}{2} + ih, i = 0, 1, \dots n+1\}\). Легко довести, що така схема має другий порядок апроксимації, тобто \( O(h^2)\). Ідея для доведення цього факту можна знайти у \cite[с. 148--149]{Samarskii71}.
+Можна розглянути цю схему як різницева схема на розширенній сітки \( \bar{\omega}'_h = \{ x = x_i, x_i = a - \frac{h}{2} + ih, i = 0, 1, \dots n+1\}\). Назвемо цю сітку усувною, а сітку у попередньому пункті -- основною. Отже, на такій сітки крайові умови матимуть вигляд:
+
+\begin{equation}
+\begin{multlined} \label{diff:boundary_extended}
+-k_{\frac{1}{2}} \frac{y_{1} - y_{0}}{h} + \alpha_1 \frac{y_{1} + y_{0}}{2} = \mu_1, \\
+k_{n+1-\frac{1}{2}} \frac{y_{n+1} - y_{n}}{h} + \alpha_2 \frac{y_{n+1} + y_{n}}{2} = \mu_2.
+\end{multlined}
+\end{equation}
+
+
+ Легко довести, що така схема має другий порядок апроксимації, тобто \( O(h^2)\). Ідея для доведення цього факту можна знайти у \cite[с. 148--149]{Samarskii71}.
 
 
 %----------------------------------------------------------------------------------------
@@ -357,10 +369,7 @@ s_i = \frac{C_i}{B_i-A_is_{i-1}}, \quad t_i = \frac{A_it_{i-1}-G_i}{B_i-A_is_{i-
 
 \section{Результат роботи програми}
 
-Надалі колір для функцій: зелений -- точний розв'язок, маджента(пурпурний) - чисельний розв'язок.
-
-
-\begin{figure}[h!]
+\begin{figure}
 \begin{center}
 	%                  a   b   m1  m2  m3  m4  m5  k1  k2  k3  p1  p2  p3  q1  q2  q3  a1  a2
     \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
@@ -371,25 +380,32 @@ s_i = \frac{C_i}{B_i-A_is_{i-1}}, \quad t_i = \frac{A_it_{i-1}-G_i}{B_i-A_is_{i-
 \end{center}
 \bigskip
 \centering
-\begin{subfigure}{.5\textwidth}
+\begin{subfigure}{.44\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{res1_n12}
   \caption{\it При \(n = 12\)}
   \label{fig:sub1}
 \end{subfigure}%
-\begin{subfigure}{.5\textwidth}
+\begin{subfigure}{.44\textwidth}
   \centering
   \includegraphics[width=.9\linewidth]{res1_n100}
   \caption{\it При \(n = 100\)}
   \label{fig:sub2}
 \end{subfigure}
-\caption{\it Результат роботи програми \cite{SourceCode} при параметрах, наведених у таблиці. Зеленим пунктиром зображено точний розв'язок, а пурпурною лінією -- чисельний розв'язок. Можна побачити, що навіть при малих значеннях \(n\), метод дає дуже гарні результати апроксимації.}
+\caption{\it Результат роботи програми \cite{SourceCode} при параметрах, наведених у таблиці. Зеленим пунктиром зображено точний розв'язок, а пурпурною лінією -- чисельний розв'язок.}
 \label{fig:res1}
 \end{figure}
 
 
-\newpage
+Надалі колір для функцій: зелений -- точний розв'язок, маджента(пурпурний) - чисельний розв'язок. На (Мал. \ref{fig:res1}) можна побачити, що навіть при малих значеннях \(n\), метод заміни диференціальних похідних частковими дає дуже гарні результати апроксимації.
+
+\bigskip
+
+
+
 Наведемо приклад, де чисельний роз'язок методом безпосередньої заміни диференціальних похідних частковими не збігається до точного розв'язку.
+
+\bigskip
 
 \begin{figure}[h!]
 \begin{center}
@@ -420,6 +436,39 @@ s_i = \frac{C_i}{B_i-A_is_{i-1}}, \quad t_i = \frac{A_it_{i-1}-G_i}{B_i-A_is_{i-
 
 У результаті, зображеної на (мал. \ref{fig:res2}) можна побачити, що різницеві схеми (\ref{diff:full_problem}) та (\ref{diff:boundary2}) не збігається до розв'язку (\ref{anal:solution}) задачі (\ref{global:problem}). Це можна пояснити тим, що, як зазначено у пункті \ref{ssec:approx}, розв'язок збігається тільки коли \( k(x) > 0\) та \(q(x) \geq 0\). У нашому прикладі, при \( k_1 = 2\) та  \( k_3 = 1\), функція \(k\) може приймати значення менше нуля, а отже, не задовольняє умовам збіжності.
 
+\bigskip
+
+Слід зазначити, що результати у (Мал. \ref{fig:res1}) були отримані за допомогою схеми апроксимізації, що описаний у пункті \ref{approx:O(h)}, тобто має перший порядок апроксимізації. У (Мал. \ref{fig:res3}) наведено порівняння результатів, що використовують схему у пункті \ref{approx:O(h)} та у пункті \ref{approx:O(h^2)}, що має порядок \(O(h^2)\).
+
+\begin{figure}[h!]
+\begin{center}
+	%                  a   b   m1  m2  m3  m4  m5  k1  k2  k3  p1  p2  p3  q1  q2  q3  a1  a2
+    \begin{tabular}{| l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l | l |}
+	\hline
+	a & b & $m_1$ & $m_2$ & $m_3$ & $m_4$ & $m_5$ & $k_1$ & $k_2$ & $k_3$ & $p_1$ & $p_2$ & $p_3$ & $q_1$ & $q_2$ & $q_3$ & $\alpha_1$ & $\alpha_2$ \\\hline
+	-1 & 1 & 10 & 3 & 1 & 1 & 7 & 1 & 2 & 2 & 4 & 1 & 1 & 1 & 2 & 1 & 1 & 1\\ \hline
+    \end{tabular}
+\end{center}
+\bigskip
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.95\linewidth]{res3_h}
+  \caption{\it \(O(h)\)При \(n = 10\)}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.95\linewidth]{res3-h2}
+  \caption{\it \(O(h^2)\) При \(n = 10\)}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{{\it Результат роботи програми \cite{SourceCode} при параметрах, наведених у таблиці. Зеленим пунктиром зображено точний розв'язок, а пурпурною лінією -- чисельний розв'язок. у (a) показано результат, при якому було використано схема у пункті \ref{approx:O(h)}, а у (b) показано результат, при якому була використана схема у пункті \ref{approx:O(h^2)}. Бачимо, що при однакових значеннях \( n\), схема у пункті \ref{approx:O(h^2)} краще апроксимує задачу.}}
+\label{fig:res3}
+\end{figure}
+
+
+\newpage
 \begin{thebibliography}{9}
 
 \bibitem{TihonovSamarskii}
